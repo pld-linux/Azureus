@@ -1,5 +1,5 @@
-Summary:	Azureus - Java BitTorrent Client
-#Summary(pl):	-
+Summary:	Azureus - Java BitTorrent blient
+Summary(pl):	Azureus - klient BitTorrenta w Javie
 Name:		Azureus
 Version:	2.1.0.4
 Release:	0.1
