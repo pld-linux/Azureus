@@ -9,6 +9,7 @@ Source0:	http://dl.sourceforge.net/azureus/%{name}_%{version}_source.zip
 # Source0-md5:	372fd6920f490ad3bc696c3ac23b0fb2
 # Source0-size:	2688856
 URL:		http://azureus.sourceforge.net/
+BuildRequires:	someone-who-will-finish-this-spec
 BuildRequires:	SEDA
 # we need SWT (whatever is it), not whole eclipse...  do we?
 BuildRequires:	eclipse
