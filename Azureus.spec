@@ -9,37 +9,39 @@ Source0:	http://dl.sourceforge.net/azureus/%{name}_%{version}_source.zip
 # Source0-md5:	372fd6920f490ad3bc696c3ac23b0fb2
 # Source0-size:	2688856
 URL:		http://azureus.sourceforge.net/
+BuildRequires:	SEDA
 # we need SWT (whatever is it), not whole eclipse...  do we?
 BuildRequires:	eclipse
 BuildRequires:	jakarta-commons-cli
 BuildRequires:	jakarta-log4j
 BuildRequires:	jdk
-BuildRequires:	SEDA
 Requires:	jre
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-blah, NFY
+Azureus provides a BitTorrent protocol implementation using Java
+language. It offers multiple torrent downloads, queuing/priority
+systems (on torrents and files), start/stop seeding options and
+instant access to numerous pieces of information about your torrents.
+Azureus now features an embedded tracker easily set up and ready to
+use.
 
-#%description -l pl
+%description -l pl
+Azureus dostarcza implementacjê protoko³u BitTorrent napisan± w jêzyku
+Java. Oferuje ¶ciaganie wielopotokowe, systemy kolejkowania i
+priorytetów (dla potoków i plików), opcje zatrzymywania i wznawiania
+oraz bezpo¶redni dostêp do wielu czê¶ci informacji o potokach. Azureus
+zawiera teraz wbudowany tracker ³atwy do skonfigurowania i u¿ywania.
 
 %prep
-%setup -q -c -n %{name}-%{version}
+%setup -q -c
 
 %build
-# if ac/am/* rebuilding is necessary, do it in this order and add
-# appropriate BuildRequires
-#%%{__gettextize}
-#%%{__aclocal}
-#%%{__autoconf}
-#%%{__autoheader}
-#%%{__automake}
 %configure
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-#install -d $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
