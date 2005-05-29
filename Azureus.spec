@@ -15,6 +15,7 @@ BuildRequires:	eclipse
 BuildRequires:	jakarta-commons-cli
 BuildRequires:	jakarta-log4j
 BuildRequires:	jdk
+BuildRequires:	unzip
 Requires:	jre
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
