@@ -1,22 +1,26 @@
-Summary:	Azureus - Java BitTorrent blient
+Summary:	Azureus - Java BitTorrent client
 Summary(pl):	Azureus - klient BitTorrenta w Javie
 Name:		Azureus
-Version:	2.1.0.4
+Version:	2.3.0.6
 Release:	0.1
 License:	GPL
-Group:		Applications/Networking
+Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/azureus/%{name}_%{version}_source.zip
-# Source0-md5:	372fd6920f490ad3bc696c3ac23b0fb2
+# Source0-md5:	d02357ee2917482fee1174a0dc549c5e
+Source1:	%{name}.png
+Source2:	%{name}.desktop
+Source3:	%{name}.sh
+Patch0:		%{name}-buildfile.patch
 URL:		http://azureus.sourceforge.net/
-BuildRequires:	someone-who-will-finish-this-spec
-BuildRequires:	SEDA
-# we need SWT (whatever is it), not whole eclipse...  do we?
-BuildRequires:	eclipse
+BuildRequires:	eclipse-swt >= 3.1.1
 BuildRequires:	jakarta-commons-cli
 BuildRequires:	jakarta-log4j
-BuildRequires:	jdk
+BuildRequires:	jdk >= 1.4
 BuildRequires:	unzip
-Requires:	jre
+Requires:	eclipse-swt >= 3.1.1
+Requires:	jakarta-commons-cli
+Requires:	jakarta-log4j
+Requires:	jre >= 1.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -36,21 +40,29 @@ zawiera teraz wbudowany tracker ³atwy do skonfigurowania i u¿ywania.
 
 %prep
 %setup -q -c
+%patch0 -p0
 
 %build
-%configure
-%{__make}
+rm -rf org/gudy/azureus2/platform/macosx/access
+rm -rf org/gudy/azureus2/ui/swt/{osx,test}
+##export ANT_OPTS=-Xmx128M
+ant jar
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_libdir}/Azureus,%{_pixmapsdir},%{_desktopdir},%{_bindir}}
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+install %{SOURCE1} $RPM_BUILD_ROOT%{_pixmapsdir}
+install %{SOURCE2} $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}/Azureus
+install dist/Azureus2.jar $RPM_BUILD_ROOT%{_libdir}/Azureus/Azureus.jar
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/*
-%{_datadir}/%{name}
+%attr(755,root,root) %{_bindir}/Azureus
+%{_desktopdir}/Azureus.desktop
+%{_pixmapsdir}/Azureus.png
+%{_libdir}/Azureus
