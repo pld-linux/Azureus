@@ -2,7 +2,7 @@ Summary:	Azureus - Java BitTorrent client
 Summary(pl):	Azureus - klient BitTorrenta w Javie
 Name:		Azureus
 Version:	2.3.0.6
-Release:	0.1
+Release:	1
 License:	GPL
 Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/azureus/%{name}_%{version}_source.zip
@@ -21,6 +21,7 @@ Requires:	eclipse-swt >= 3.1.1
 Requires:	jakarta-commons-cli
 Requires:	jakarta-log4j
 Requires:	jre >= 1.4
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -50,12 +51,12 @@ ant jar
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir}/Azureus,%{_pixmapsdir},%{_desktopdir},%{_bindir}}
+install -d $RPM_BUILD_ROOT{%{_datadir}/Azureus,%{_pixmapsdir},%{_desktopdir},%{_bindir}}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_pixmapsdir}
 install %{SOURCE2} $RPM_BUILD_ROOT%{_desktopdir}
 install %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}/Azureus
-install dist/Azureus2.jar $RPM_BUILD_ROOT%{_libdir}/Azureus/Azureus.jar
+install dist/Azureus2.jar $RPM_BUILD_ROOT%{_datadir}/Azureus/Azureus.jar
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -65,4 +66,4 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/Azureus
 %{_desktopdir}/Azureus.desktop
 %{_pixmapsdir}/Azureus.png
-%{_libdir}/Azureus
+%{_datadir}/Azureus
