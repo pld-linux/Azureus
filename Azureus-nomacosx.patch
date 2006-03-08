@@ -1,0 +1,10 @@
+--- Azureus.old/org/gudy/azureus2/platform/PlatformManagerFactory.java	2006-03-08 17:34:20.000000000 +0100
++++ Azureus/org/gudy/azureus2/platform/PlatformManagerFactory.java	2006-03-08 19:15:36.000000000 +0100
+@@ -52,7 +52,6 @@
+ 						
+ 					}else if( getPlatformType() == PlatformManager.PT_MACOSX ){
+ 						
+-	                    platform_manager = org.gudy.azureus2.platform.macosx.PlatformManagerImpl.getSingleton();
+ 	                    
+ 					}
+ 				}catch( PlatformManagerException e ){
