@@ -1,16 +1,18 @@
 Summary:	Azureus - Java BitTorrent client
 Summary(pl):	Azureus - klient BitTorrenta w Javie
 Name:		Azureus
-Version:	2.3.0.6
+Version:	2.4.0.0
 Release:	1
 License:	GPL
 Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/azureus/%{name}_%{version}_source.zip
-# Source0-md5:	d02357ee2917482fee1174a0dc549c5e
+# Source0-md5:	cb0390f3e1d158453fca980c92050a56
 Source1:	%{name}.png
 Source2:	%{name}.desktop
 Source3:	%{name}.sh
 Patch0:		%{name}-buildfile.patch
+Patch1:		%{name}-nomacosx.patch
+Patch2:		%{name}-swt31.patch
 URL:		http://azureus.sourceforge.net/
 BuildRequires:	eclipse-swt >= 3.1.1
 BuildRequires:	jakarta-commons-cli
@@ -42,6 +44,8 @@ zawiera teraz wbudowany tracker ³atwy do skonfigurowania i u¿ywania.
 %prep
 %setup -q -c
 %patch0 -p0
+%patch1 -p1
+%patch2 -p1
 
 %build
 rm -rf org/gudy/azureus2/platform/macosx/access
