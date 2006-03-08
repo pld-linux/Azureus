@@ -1,0 +1,66 @@
+diff -ur Azureus.old/org/gudy/azureus2/ui/swt/Messages.java Azureus/org/gudy/azureus2/ui/swt/Messages.java
+--- Azureus.old/org/gudy/azureus2/ui/swt/Messages.java	2006-03-08 17:34:18.000000000 +0100
++++ Azureus/org/gudy/azureus2/ui/swt/Messages.java	2006-03-08 19:04:34.000000000 +0100
+@@ -222,17 +222,6 @@
+ 			if (key != null) {
+ 				if (!key.endsWith(".info"))
+ 					key += ".info";
+-				String toolTip = MessageText.getString(key, (String) null);
+-				if (toolTip == null)
+-					toolTip = MessageText.getString(key.substring(0, key.length() - 5),
+-							(String) null);
+-				if (toolTip != null) {
+-					try {
+-						((TableColumn) widget).setToolTipText(toolTip);
+-					} catch (NoSuchMethodError e) {
+-						// Pre SWT 3.2
+-					}
+-				}
+ 			}
+     }
+   }
+diff -ur Azureus.old/org/gudy/azureus2/ui/swt/views/configsections/ConfigSectionPlugins.java Azureus/org/gudy/azureus2/ui/swt/views/configsections/ConfigSectionPlugins.java
+--- Azureus.old/org/gudy/azureus2/ui/swt/views/configsections/ConfigSectionPlugins.java	2006-03-08 17:34:18.000000000 +0100
++++ Azureus/org/gudy/azureus2/ui/swt/views/configsections/ConfigSectionPlugins.java	2006-03-08 19:03:24.000000000 +0100
+@@ -373,12 +373,6 @@
+ 			tc.addSelectionListener(new SelectionAdapter() {
+ 				public void widgetSelected(SelectionEvent e) {
+ 					boolean ascending = comparator.setField(table.indexOf(tc));
+-					try {
+-						table.setSortColumn(tc);
+-						table.setSortDirection(ascending ? SWT.UP : SWT.DOWN);
+-					} catch (NoSuchMethodError ignore) {
+-						// Ignore Pre 3.0
+-					}
+ 					Collections.sort(pluginIFs, comparator);
+ 					table.clearAll();
+ 				}
+diff -ur Azureus.old/org/gudy/azureus2/ui/swt/views/TableView.java Azureus/org/gudy/azureus2/ui/swt/views/TableView.java
+--- Azureus.old/org/gudy/azureus2/ui/swt/views/TableView.java	2006-03-08 17:34:18.000000000 +0100
++++ Azureus/org/gudy/azureus2/ui/swt/views/TableView.java	2006-03-08 19:01:17.000000000 +0100
+@@ -2713,25 +2713,6 @@
+ 	private void changeColumnIndicator() {
+ 		if (table == null || table.isDisposed())
+ 			return;
+-
+-		try {
+-			// can't use TableColumnCore.getPosition, because user may have moved
+-			// columns around, messing up the SWT column indexes.  
+-			// We can either use search columnsOrdered, or search table.getColumns()
+-			TableColumn[] tcs = table.getColumns();
+-			for (int i = 0; i < tcs.length; i++) {
+-				String sName = (String)tcs[i].getData("Name");
+-				if (sName != null && sName.equals(rowSorter.sColumnName)) {
+-					table.setSortDirection(rowSorter.bAscending ? SWT.UP : SWT.DOWN);
+-					table.setSortColumn(tcs[i]);
+-					return;
+-				}
+-			}
+-
+-			table.setSortColumn(null);
+-		} catch (NoSuchMethodError e) {
+-			// sWT < 3.2 doesn't have column indicaters
+-		}
+ 	}
+ 
+ 	private void visibleRowsChanged() {
