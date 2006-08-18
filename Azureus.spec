@@ -36,7 +36,7 @@ use.
 
 %description -l pl
 Azureus dostarcza implementacjê protoko³u BitTorrent napisan± w jêzyku
-Java. Oferuje ¶ciaganie wielopotokowe, systemy kolejkowania i
+Java. Oferuje ¶ci±ganie wielopotokowe, systemy kolejkowania i
 priorytetów (dla potoków i plików), opcje zatrzymywania i wznawiania
 oraz bezpo¶redni dostêp do wielu czê¶ci informacji o potokach. Azureus
 zawiera teraz wbudowany tracker ³atwy do skonfigurowania i u¿ywania.
