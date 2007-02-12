@@ -1,5 +1,5 @@
 Summary:	Azureus - Java BitTorrent client
-Summary(pl):	Azureus - klient BitTorrenta w Javie
+Summary(pl.UTF-8):   Azureus - klient BitTorrenta w Javie
 Name:		Azureus
 Version:	2.5.0.0
 Release:	1
@@ -34,12 +34,12 @@ instant access to numerous pieces of information about your torrents.
 Azureus now features an embedded tracker easily set up and ready to
 use.
 
-%description -l pl
-Azureus dostarcza implementacjê protoko³u BitTorrent napisan± w jêzyku
-Java. Oferuje ¶ci±ganie wielopotokowe, systemy kolejkowania i
-priorytetów (dla potoków i plików), opcje zatrzymywania i wznawiania
-oraz bezpo¶redni dostêp do wielu czê¶ci informacji o potokach. Azureus
-zawiera teraz wbudowany tracker ³atwy do skonfigurowania i u¿ywania.
+%description -l pl.UTF-8
+Azureus dostarcza implementacjÄ™ protokoÅ‚u BitTorrent napisanÄ… w jÄ™zyku
+Java. Oferuje Å›ciÄ…ganie wielopotokowe, systemy kolejkowania i
+priorytetÃ³w (dla potokÃ³w i plikÃ³w), opcje zatrzymywania i wznawiania
+oraz bezpoÅ›redni dostÄ™p do wielu czÄ™Å›ci informacji o potokach. Azureus
+zawiera teraz wbudowany tracker Å‚atwy do skonfigurowania i uÅ¼ywania.
 
 %prep
 %setup -q -c
