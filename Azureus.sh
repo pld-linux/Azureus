@@ -1,8 +1,8 @@
 #!/bin/sh
 
-AZUHOME="$HOME/.Azureus"
+AZUHOME="$HOME/.azureus"
 
-if [ `arch` == "x86_64" ]; then
+if [ $(arch) == "x86_64" ]; then
 	LIBDIR="/usr/lib64"
 else
 	LIBDIR="/usr/lib"
@@ -17,7 +17,7 @@ else
 	
 	UI="swt"
 	
-	cat > $AZUHOME/pld.config << EOF
+	cat > $AZUHOME/pld.config << 'EOF'
 # UI options:
 # - swt
 # - console
@@ -30,4 +30,4 @@ fi
 
 CLASSPATH="/usr/share/java/swt.jar:/usr/share/java/commons-cli.jar:/usr/share/java/log4j.jar:/usr/share/Azureus/Azureus.jar"
 
-java -cp $CLASSPATH -Djava.library.path=$LIBDIR/swt org.gudy.azureus2.ui.common.Main --ui=$UI
+exec java -cp $CLASSPATH -Djava.library.path=$LIBDIR/swt org.gudy.azureus2.ui.common.Main --ui=$UI
