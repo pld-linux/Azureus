@@ -1,0 +1,350 @@
+--- Azureus-3.0.3.4/com/aelitis/azureus/core/update/impl/AzureusRestarterImpl.java	2007-11-25 16:13:19.744461541 +0200
++++ Azureus-3.0.3.4-new/com/aelitis/azureus/core/update/impl/AzureusRestarterImpl.java	2007-11-25 16:07:36.824808968 +0200
+@@ -30,8 +30,6 @@
+ import org.gudy.azureus2.platform.PlatformManager;
+ import org.gudy.azureus2.platform.PlatformManagerFactory;
+ import org.gudy.azureus2.platform.unix.ScriptAfterShutdown;
+-import org.gudy.azureus2.platform.win32.access.AEWin32Access;
+-import org.gudy.azureus2.platform.win32.access.AEWin32Manager;
+ import org.gudy.azureus2.update.UpdaterUtils;
+ 
+ import com.aelitis.azureus.core.AzureusCore;
+@@ -297,141 +295,6 @@
+ 		return null;
+ 	}
+ 
+-  private boolean restartViaEXE(PrintWriter log,
+-  		String exeUpdater,
+-      String[]  properties,
+-      String[]  parameters,
+-      String backupJavaRunString,
+-      boolean update_only) 
+-  {
+-		String azRunner = null;
+-		File fileRestart = null;
+-		if (!update_only) {
+-  		try {
+-  			azRunner = PlatformManagerFactory.getPlatformManager().getApplicationCommandLine();
+-  		} catch (PlatformManagerException e) {
+-  			// TODO Auto-generated catch block
+-  			e.printStackTrace();
+-  		}
+-		}
+-
+-		try {
+-			int result;
+-			AEWin32Access accessor = AEWin32Manager.getAccessor(true);
+-			if (accessor == null) {
+-				result = -123;
+-			} else {
+-				if (azRunner != null) {
+-					// create a batch file to run the updater, then to restart azureus
+-					// bceause the updater would restart azureus as administrator user
+-					// and confuse the user
+-					fileRestart = FileUtil.getUserFile("restart.bat");
+-					String s = "title Azureus Updater Runner\r\n";
+-					s += exeUpdater + " \"updateonly\"";
+-					for (int i = 1; i < parameters.length; i++) {
+-						s += " \"" + parameters[i].replaceAll("\\\"", "") + "\"";
+-					}
+-					s += "\r\n";
+-					s += "start \"\" \"" + azRunner + "\"";
+-					FileUtil.writeBytesAsFile(fileRestart.getAbsolutePath(), s.getBytes());
+-
+-					result = accessor.shellExecute(null, fileRestart.getAbsolutePath(),
+-							null, SystemProperties.getApplicationPath(),
+-							AEWin32Access.SW_SHOWMINIMIZED);
+-				} else {
+-					String execEXE = "\"-J" + getClassPath().replaceAll("\\\"", "")
+-							+ "\" ";
+-
+-					for (int i = 0; i < properties.length; i++) {
+-						execEXE += "\"-J" + properties[i].replaceAll("\\\"", "") + "\" ";
+-					}
+-
+-					for (int i = 0; i < parameters.length; i++) {
+-						execEXE += " \"" + parameters[i].replaceAll("\\\"", "") + "\"";
+-					}
+-
+-					log.println("Launch via " + exeUpdater + " params " + execEXE);
+-					result = accessor.shellExecute(null, exeUpdater, execEXE,
+-							SystemProperties.getApplicationPath(), AEWin32Access.SW_NORMAL);
+-				}
+-			}
+-
+-			/*
+-			 * Some results:
+-			 * 0: OOM
+-			 * 2: FNF
+-			 * 3: Path Not Foud
+-			 * 5: Access Denied (User clicked cancel on admin access dialog)
+-			 * 8: OOM
+-			 * 11: Bad Format
+-			 * 26: Sharing Violation
+-			 * 27: Association incomplete
+-			 * 28: DDE Timeout
+-			 * 29: DDE Fail
+-			 * 30: DDE Busy
+-			 * 31: No Association
+-			 * 32: DLL Not found
+-			 * >32: OK!
+-			 */
+-			log.println("   -> " + result);
+-
+-			if (result <= 32) {
+-				String sErrorReason = "";
+-				String key = null;
+-
+-				switch (result) {
+-					case 0:
+-					case 8:
+-						key = "oom";
+-						break;
+-
+-					case 2:
+-						key = "fnf";
+-						break;
+-
+-					case 3:
+-						key = "pnf";
+-						break;
+-
+-					case 5:
+-						key = "denied";
+-						break;
+-
+-					case 11:
+-						key = "bad";
+-						break;
+-
+-					case -123:
+-						key = "nowin32";
+-						break;
+-
+-					default:
+-						sErrorReason = "" + result;
+-						break;
+-				}
+-				if (key != null) {
+-					sErrorReason = MessageText.getString("restart.error." + key,
+-							new String[] {
+-								exeUpdater,
+-								SystemProperties.getApplicationPath(),
+-							});
+-				}
+-				Logger.log(new LogAlert(false, LogAlert.AT_ERROR,
+-						MessageText.getString("restart.error", new String[] {
+-							sErrorReason
+-						})));
+-				return false;
+-			}
+-		} catch (Throwable f) {
+-
+-			f.printStackTrace(log);
+-
+-			return javaSpawn(log, backupJavaRunString);
+-		}
+-
+-		return true;
+-	}
+-  
+ 
+   // ****************** This code is copied into Restarter / Updater so make changes there too !!!
+   
+@@ -446,107 +309,9 @@
+     String[]  parameters,
+     boolean update_only) 
+   {
+-    if(Constants.isOSX){
+-    	
+-    	restartAzureus_OSX(log,mainClass,properties,parameters);
+-    	
+-    }else if( Constants.isUnix ){
+-    	
+-    	restartAzureus_Unix(log,mainClass,properties,parameters);
+-      
+-    }else{
+-    	
+-    	restartAzureus_win32(log,mainClass,properties,parameters,update_only);
+-    }
++	restartAzureus_Unix(log,mainClass,properties,parameters);
+   }
+   
+-  private void 
+-  restartAzureus_win32(
+-      PrintWriter log,
+-    String    mainClass,
+-    String[]  properties,
+-    String[]  parameters,
+-    boolean	update_only) 
+-  {
+-  	String exeUpdater = getExeUpdater(log);  // Not for Updater.java
+-
+-  	String exec;
+-
+-		//Classic restart way using Runtime.exec directly on java(w)
+-		exec = "\"" + JAVA_EXEC_DIR + "javaw\" " + getClassPath() + getLibraryPath();
+-
+-		for (int i = 0; i < properties.length; i++) {
+-			exec += properties[i] + " ";
+-		}
+-
+-		exec += mainClass;
+-
+-		for (int i = 0; i < parameters.length; i++) {
+-			exec += " \"" + parameters[i] + "\"";
+-		}
+-
+-		if (exeUpdater != null) {
+-			restartViaEXE(log, exeUpdater, properties, parameters, exec, update_only);
+-		} else {
+-			if (log != null) {
+-				log.println("  " + exec);
+-			}
+-
+-			if (!win32NativeRestart(log, exec)) {
+-				javaSpawn(log, exec);
+-			}
+-		}
+-	}
+-  
+-
+-	private boolean
+-	javaSpawn(
+-		PrintWriter log, 
+-		String execString) 
+-	{
+-		try {
+-			// hmm, try java method - this WILL inherit handles but might work :)
+-
+-			log.println("Using java spawn");
+-
+-			//NOTE: no logging done here, as we need the method to return right away, before the external process completes
+-			Process p = Runtime.getRuntime().exec(execString);
+-
+-			log.println("    -> " + p);
+-
+-			return true;
+-		} catch (Throwable g) {
+-
+-			g.printStackTrace();
+-			return false;
+-		}
+-	}
+-
+-	private void 
+-  restartAzureus_OSX(
+-      PrintWriter log,
+-    String mainClass,
+-    String[]  properties,
+-    String[] parameters) 
+-  {
+-
+-     String exec = "\"" + JAVA_EXEC_DIR + "java\" " + getClassPath() + getLibraryPath();
+-  	 
+-     for (int i=0;i<properties.length;i++){
+-    	 exec += properties[i] + " ";
+-     }
+-    
+-     exec += mainClass ;
+-    
+-     for(int i = 0 ; i < parameters.length ; i++) {
+-    	 exec += " \"" + parameters[i] + "\"";
+-     }
+-
+-     runExternalCommandViaUnixShell( log, exec );
+-  }
+-  
+-  
+-  
+   private int getUnixScriptVersion() {
+ 		String sVersion = System.getProperty("azureus.script.version", "0");
+ 		int version = 0;
+--- Azureus-3.0.3.4/com/aelitis/azureus/ui/swt/views/skin/TorrentListViewsUtils.java	2007-11-25 16:13:20.004476443 +0200
++++ Azureus-3.0.3.4-new/com/aelitis/azureus/ui/swt/views/skin/TorrentListViewsUtils.java	2007-11-25 16:08:41.120493661 +0200
+@@ -64,7 +64,6 @@
+ import com.aelitis.azureus.ui.swt.views.TorrentListViewListener;
+ import com.aelitis.azureus.util.AdManager;
+ import com.aelitis.azureus.util.Constants;
+-import com.aelitis.azureus.util.win32.Win32Utils;
+ 
+ import org.gudy.azureus2.plugins.PluginInterface;
+ import org.gudy.azureus2.plugins.PluginManager;
+@@ -602,17 +601,6 @@
+ 	 * @param string
+ 	 */
+ 	private static boolean runInMediaPlayer(String mediaFile) {
+-		if (Constants.isWindows) {
+-			String wmpEXE = Win32Utils.getWMP();
+-			if (new File(wmpEXE).exists()) {
+-				try {
+-					Runtime.getRuntime().exec(wmpEXE + " \"" + mediaFile + "\"");
+-					return true;
+-				} catch (IOException e) {
+-					Debug.out("error playing " + mediaFile + " via WMP " + mediaFile, e);
+-				}
+-			}
+-		}
+ 		return false;
+ 	}
+ 
+--- Azureus-3.0.3.4/org/gudy/azureus2/platform/PlatformManagerFactory.java	2007-11-25 16:13:20.840524357 +0200
++++ Azureus-3.0.3.4-new/org/gudy/azureus2/platform/PlatformManagerFactory.java	2007-11-25 16:10:50.123886748 +0200
+@@ -44,34 +44,8 @@
+ 			class_mon.enter();
+ 		
+ 			if ( platform_manager == null ){
+-										  
+-				try{
+-					if ( getPlatformType() == PlatformManager.PT_WINDOWS ){
+-						
+-						platform_manager = org.gudy.azureus2.platform.win32.PlatformManagerImpl.getSingleton();
+-						
+-					}else if( getPlatformType() == PlatformManager.PT_MACOSX ){
+-						
+-	                    platform_manager = org.gudy.azureus2.platform.macosx.PlatformManagerImpl.getSingleton();
+-	                    
+-					}else if( getPlatformType() == PlatformManager.PT_UNIX ){
+-						
+-            platform_manager = org.gudy.azureus2.platform.unix.PlatformManagerImpl.getSingleton();
+-
+-					}
+-				}catch( PlatformManagerException e ){
+-					
+-						// exception will already have been logged
+-					
+-				}catch( Throwable e ){
+-					
+-					Debug.printStackTrace(e);
+-				}
+-			}
+-			
+-			if ( platform_manager == null ){
+ 				
+-				platform_manager = org.gudy.azureus2.platform.dummy.PlatformManagerImpl.getSingleton();
++				platform_manager = org.gudy.azureus2.platform.unix.PlatformManagerImpl.getSingleton();
+ 			}
+ 			
+ 			return( platform_manager );
+--- Azureus-3.0.3.4/org/gudy/azureus2/platform/PlatformManagerPluginDelegate.java	2007-11-25 16:13:20.840524357 +0200
++++ Azureus-3.0.3.4-new/org/gudy/azureus2/platform/PlatformManagerPluginDelegate.java	2007-11-25 16:12:12.344598819 +0200
+@@ -23,7 +23,6 @@
+ import java.util.Properties;
+ 
+ import org.gudy.azureus2.platform.unix.PlatformManagerUnixPlugin;
+-import org.gudy.azureus2.platform.win32.PlatformManagerUpdateChecker;
+ 
+ import org.gudy.azureus2.plugins.Plugin;
+ import org.gudy.azureus2.plugins.PluginException;
+@@ -45,10 +44,7 @@
+ 		PlatformManager platform = PlatformManagerFactory.getPlatformManager();
+ 
+ 		int platformType = platform.getPlatformType();
+-		if (platformType == PlatformManager.PT_WINDOWS) {
+-			PlatformManagerUpdateChecker plugin = new PlatformManagerUpdateChecker();
+-			plugin.initialize(pluginInterface);
+-		} else if (platformType == PlatformManager.PT_UNIX) {
++		if (platformType == PlatformManager.PT_UNIX) {
+ 			PlatformManagerUnixPlugin plugin = new PlatformManagerUnixPlugin();
+ 			plugin.initialize(pluginInterface);
+ 		} else {
