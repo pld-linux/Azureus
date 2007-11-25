@@ -2,10 +2,12 @@
 Name=Azureus
 Comment=BitTorrent client
 Comment[pl]=Klient BitTorrenta
+GenericName=BitTorrent Client
 Exec=Azureus
 Icon=Azureus.png
 Terminal=false
-Categories=Java;Network;P2P;
+Categories=Application;Network;FileTransfer;P2P;GTK;Java;
 Type=Application
 Encoding=UTF-8
+MimeType=application/x-bittorrent;application/x-torrent;
 # vi: encoding=utf-8
