@@ -12,14 +12,16 @@ Source2:	%{name}.desktop
 Source3:	%{name}.sh
 Patch0:		%{name}-buildfile.patch
 Patch1:		%{name}-nomacosx.patch
-Patch2:		%{name}-swt31.patch
 URL:		http://azureus.sourceforge.net/
 BuildRequires:	eclipse-swt >= 3.1.1
 BuildRequires:	jakarta-commons-cli
 BuildRequires:	jdk >= 1.4
+BuildRequires:	jpackage-utils
 BuildRequires:	logging-log4j
+BuildRequires:	rpmbuild(macros) >= 1.300
+BuildRequires:	sed >= 4.0
 BuildRequires:	unzip
-Requires:	eclipse-swt >= 3.1.1
+Requires:	eclipse-swt >= 3.3
 Requires:	jakarta-commons-cli
 Requires:	jre >= 1.4
 Requires:	logging-log4j
@@ -43,15 +45,21 @@ zawiera teraz wbudowany tracker łatwy do skonfigurowania i używania.
 
 %prep
 %setup -q -c
-%patch0 -p0
+find '(' -name '*.java' -o -name '*.xml' ')' -print0 | xargs -0 sed -i -e 's,\r$,,'
+
+%patch0 -p1
 %patch1 -p1
-%patch2 -p1
+
+find -name osx | xargs rm -r
+find -name 'macosx' | xargs rm -r
+find -name 'win32*' | xargs rm -r
+find -name 'Win32*' | xargs rm -r
+# Remove test code
+rm org/gudy/azureus2/ui/swt/test/PrintTransferTypes.java
 
 %build
-rm -rf org/gudy/azureus2/platform/macosx/access
-rm -rf org/gudy/azureus2/ui/swt/{osx,test}
-##export ANT_OPTS=-Xmx128M
-ant jar
+export ANT_OPTS=-Xmx128M
+%ant jar
 
 %install
 rm -rf $RPM_BUILD_ROOT
