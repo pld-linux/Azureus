@@ -16,13 +16,13 @@ Patch2:		%{name}-swt31.patch
 URL:		http://azureus.sourceforge.net/
 BuildRequires:	eclipse-swt >= 3.1.1
 BuildRequires:	jakarta-commons-cli
-BuildRequires:	jakarta-log4j
 BuildRequires:	jdk >= 1.4
+BuildRequires:	logging-log4j
 BuildRequires:	unzip
 Requires:	eclipse-swt >= 3.1.1
 Requires:	jakarta-commons-cli
-Requires:	jakarta-log4j
 Requires:	jre >= 1.4
+Requires:	logging-log4j
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
