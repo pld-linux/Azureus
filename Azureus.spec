@@ -1,12 +1,13 @@
+%include	/usr/lib/rpm/macros.java
 Summary:	Azureus - Java BitTorrent client
 Summary(pl.UTF-8):	Azureus - klient BitTorrenta w Javie
 Name:		Azureus
-Version:	3.0.3.4
+Version:	3.0.4.0
 Release:	1
 License:	GPL
 Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/azureus/%{name}_%{version}_source.zip
-# Source0-md5:	1dd3f6cbf77ce90c1eb2f80d01c7e912
+# Source0-md5:	d76fb26dc907b9ee617556be3a165ac4
 Source1:	%{name}.png
 Source2:	%{name}.desktop
 Source3:	%{name}.sh
@@ -18,6 +19,7 @@ BuildRequires:	jakarta-commons-cli
 BuildRequires:	jdk >= 1.4
 BuildRequires:	jpackage-utils
 BuildRequires:	logging-log4j
+BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.300
 BuildRequires:	sed >= 4.0
 BuildRequires:	unzip
