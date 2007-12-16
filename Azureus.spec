@@ -60,7 +60,7 @@ find -name 'Win32*' | xargs rm -r
 rm org/gudy/azureus2/ui/swt/test/PrintTransferTypes.java
 
 %build
-export ANT_OPTS=-Xmx128M
+export ANT_OPTS=-Xmx256M
 %ant jar
 
 %install
