@@ -2,12 +2,12 @@
 Summary:	Azureus - Java BitTorrent client
 Summary(pl.UTF-8):	Azureus - klient BitTorrenta w Javie
 Name:		Azureus
-Version:	3.0.4.0
-Release:	2
+Version:	3.0.4.2
+Release:	1
 License:	GPL
 Group:		X11/Applications/Networking
 Source0:	http://dl.sourceforge.net/azureus/%{name}_%{version}_source.zip
-# Source0-md5:	d76fb26dc907b9ee617556be3a165ac4
+# Source0-md5:	fff98b2e2c2006cd71acf10116fc81c6
 Source1:	%{name}.png
 Source2:	%{name}.desktop
 Source3:	%{name}.sh
