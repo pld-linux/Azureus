@@ -18,6 +18,7 @@ BuildRequires:	eclipse-swt >= 3.1.1
 BuildRequires:	jakarta-commons-cli
 BuildRequires:	jdk >= 1.4
 BuildRequires:	jpackage-utils
+BuildRequires:	junit
 BuildRequires:	logging-log4j
 BuildRequires:	rpm-javaprov
 BuildRequires:	rpmbuild(macros) >= 1.300
