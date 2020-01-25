@@ -1,4 +1,3 @@
-%include	/usr/lib/rpm/macros.java
 Summary:	Azureus - Java BitTorrent client
 Summary(pl.UTF-8):	Azureus - klient BitTorrenta w Javie
 Name:		Azureus
