@@ -49,7 +49,7 @@ zawiera teraz wbudowany tracker łatwy do skonfigurowania i używania.
 %setup -q -c
 find '(' -name '*.java' -o -name '*.xml' ')' -print0 | xargs -0 sed -i -e 's,\r$,,'
 
-%patch0 -p1
+%patch -P0 -p1
 cp %{SOURCE4} build.xml
 
 find -name 'osx' | xargs rm -r
